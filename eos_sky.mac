@@ -4,7 +4,6 @@
 #set the detector parameters
 /rat/db/set DETECTOR experiment "Eos"
 /rat/db/set DETECTOR geo_file "Eos/Eos.geo"
-/rat/db/set GEO[pmts_side] pos_table "PMTINFO_side_1cm_176"
 
 # Set cry variables for eos
 /rat/db/set CRY latitude 37.8715
@@ -20,9 +19,11 @@
 # BEGIN EVENT LOOP
 /rat/proc simpledaq
 /rat/proc count
-/rat/procset update 100000
+/rat/procset update 1000
 
 /rat/proclast outroot
+#/rat/proclast eosntuple
+#/rat/procset include_tracking 1
 #END EVENT LOOP
 
 ##### GENERATORS #################
@@ -34,4 +35,4 @@
 #/generator/pos/set 0.0 0.0 0.0
 
 ##### RUN ###########
-/run/beamOn 10000000
+/run/beamOn 1000000

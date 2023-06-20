@@ -1,0 +1,74 @@
+/glg4debug/glg4param omit_muon_processes  0.0
+/glg4debug/glg4param omit_hadronic_processes  0.0
+
+#set the detector parameters
+/rat/db/set DETECTOR experiment "Eos"
+/rat/db/set DETECTOR geo_file "Eos/Eos.geo"
+
+# Set cry variables for eos
+/rat/db/set CRY latitude 37.8715
+/rat/db/set CRY subboxLength 10
+
+/rat/physics/setCerenkovMaxNumPhotonsPerStep 500
+/rat/physics/enableCerenkov 0
+
+# Colors
+/rat/db/set GEO[world] invisible 1
+/rat/db/set GEO[outer_tank] color [0.42,0.47,0.57,0.95]
+/rat/db/set GEO[inner_tank] color [0.2,0.2,0.9,0.2]
+#/rat/db/set GEO[neck] color [0.42,0.47,0.57,0.95]
+/rat/db/set GEO[eos_vessel] color [0.6,0.2,0.2,0.1]
+# Acrylic
+/rat/db/set GEO[eos_inner] color [0.4,0.2,0.2,0.4]
+#/rat/db/set GEO[port] color [0.4,0.2,0.2,0.4]
+/rat/db/set GEO[bottom_leg1] color [0.4,0.2,0.2,0.4]
+/rat/db/set GEO[bottom_leg2] color [0.4,0.2,0.2,0.4]
+/rat/db/set GEO[bottom_leg3] color [0.4,0.2,0.2,0.4]
+/rat/db/set GEO[bottom_leg4] color [0.4,0.2,0.2,0.4]
+/rat/db/set GEO[top_leg1] color [0.4,0.2,0.2,0.4]
+/rat/db/set GEO[top_leg2] color [0.4,0.2,0.2,0.4]
+/rat/db/set GEO[top_leg3] color [0.4,0.2,0.2,0.4]
+/rat/db/set GEO[top_leg4] color [0.4,0.2,0.2,0.4]
+
+/run/initialize
+
+/rat/physics/scintillation/off
+##### Visualization ##########################
+
+/vis/open OGLSQt
+/vis/scene/create
+/vis/scene/add/trajectories rich smooth
+/tracking/storeTrajectory 1
+/tracking/FillPointCont 1
+/vis/scene/add/volume
+/vis/scene/add/hits
+/vis/sceneHandler/attach
+/vis/viewer/set/upVector 0.0 0.0 1.0
+/vis/viewer/set/viewpointThetaPhi -90 135 
+/vis/viewer/set/style s
+/vis/viewer/flush
+
+## Accumulate events
+/vis/scene/endOfEventAction accumulate 1000
+
+## Cut a plane through the detector
+#/vis/viewer/addCutawayPlane 0 0 0 cm 1 0 0
+
+# BEGIN EVENT LOOP
+/rat/proc simpledaq
+/rat/proc count
+/rat/procset update 10
+
+/rat/proclast outroot
+#END EVENT LOOP
+
+##### GENERATORS #################
+/generator/add combo cry:point
+/generator/pos/set 0.0 0.0 2000.0
+
+#/generator/add combo gun:fill:poisson
+#/generator/vtx/set mu- 0.0 0.0 0.0 200.0
+#/generator/pos/set 0.0 0.0 0.0
+
+##### RUN ###########
+/run/beamOn 1
